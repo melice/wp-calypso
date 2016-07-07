@@ -11,7 +11,13 @@ import React, { PropTypes } from 'react';
 import Button from 'components/button';
 import Gridicon from 'components/gridicon';
 
-const PlanFeaturesActions = ( { translate, current = false, available = true, onUpgradeClick = noop } ) => {
+const PlanFeaturesActions = ( {
+	available = true,
+	current = false,
+	freePlan = false,
+	onUpgradeClick = noop,
+	translate
+} ) => {
 	let upgradeButton;
 
 	if ( current ) {
@@ -24,7 +30,11 @@ const PlanFeaturesActions = ( { translate, current = false, available = true, on
 	} else if ( available ) {
 		upgradeButton = (
 			<Button className="plan-features__actions-button" onClick={ onUpgradeClick } primary>
-				{ translate( 'Upgrade' ) }
+				{
+					freePlan
+						? translate( 'Select Free' )
+						: translate( 'Upgrade' )
+				}
 			</Button>
 		);
 	}
@@ -41,7 +51,8 @@ const PlanFeaturesActions = ( { translate, current = false, available = true, on
 PlanFeaturesActions.propTypes = {
 	current: PropTypes.bool,
 	available: PropTypes.bool,
-	onUpgradeClick: PropTypes.func
+	onUpgradeClick: PropTypes.func,
+	freePlan: PropTypes.bool
 };
 
 export default localize( PlanFeaturesActions );

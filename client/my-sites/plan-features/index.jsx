@@ -25,7 +25,8 @@ import {
 } from 'state/plans/selectors';
 import {
 	isPopular,
-	isMonthly
+	isMonthly,
+	PLAN_FREE
 } from 'lib/plans/constants';
 import { getSiteSlug } from 'state/sites/selectors';
 import {
@@ -157,6 +158,7 @@ class PlanFeatures extends Component {
 						current={ current }
 						available = { available }
 						onUpgradeClick={ onUpgradeClick }
+						freePlan={ planName === PLAN_FREE }
 					/>
 				</td>
 			);
@@ -235,6 +237,7 @@ class PlanFeatures extends Component {
 						current={ current }
 						available = { available }
 						onUpgradeClick={ onUpgradeClick }
+						freePlan={ planName === PLAN_FREE }
 					/>
 				</td>
 			);
