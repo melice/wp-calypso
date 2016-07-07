@@ -57,7 +57,7 @@ class PlanFeatures extends Component {
 						<tr>
 							{ this.renderTopButtons() }
 						</tr>
-						{ this.renderPlanFeatureLists() }
+						{ this.renderPlanFeatureRows() }
 						<tr>
 							{ this.renderBottomButtons() }
 						</tr>
@@ -139,47 +139,54 @@ class PlanFeatures extends Component {
 		} );
 	}
 
-	renderPlanFeatureLists() {
+	getLongestFeaturesList() {
 		const { planProperties } = this.props;
 
-		const longestFeatures = reduce( planProperties, ( longest, properties ) => {
+		return reduce( planProperties, ( longest, properties ) => {
 			const currentFeatures = Object.keys( properties.features );
 			return currentFeatures.length > longest.length
 				? currentFeatures
 				: longest;
 		}, [] );
+	}
 
-		return map( longestFeatures, ( featureKey, index ) => {
+	renderPlanFeatureRows() {
+		const longestFeatures = this.getLongestFeaturesList();
+		return map( longestFeatures, ( featureKey, rowIndex ) => {
 			return (
 				<tr>
-					{
-						map( planProperties, ( properties ) => {
-							const {
-								features,
-								planName
-							} = properties;
-							const featureKeys = Object.keys( features );
-							const key = featureKeys[ index ];
-							const classes = classNames( {
-								'is-last-item': index + 1 === featureKeys.length
-							} );
-							const currentFeature = features[ key ];
-							return (
-								currentFeature
-									? <td key={ `${ planName }-${ key }` } className="plan-features__table-item">
-										<PlanFeaturesItem className={ classes } description={
+					{ this.renderPlanFeatureColumns( rowIndex ) }
+				</tr>
+			);
+		} );
+	}
+
+	renderPlanFeatureColumns( rowIndex ) {
+		const { planProperties } = this.props;
+
+		return map( planProperties, ( properties ) => {
+			const {
+				features,
+				planName
+			} = properties;
+			const featureKeys = Object.keys( features );
+			const key = featureKeys[ rowIndex ];
+			const classes = classNames( {
+				'is-last-item': rowIndex + 1 === featureKeys.length
+			} );
+			const currentFeature = features[ key ];
+			return (
+				currentFeature
+					? <td key={ `${ planName }-${ key }` } className="plan-features__table-item">
+						<PlanFeaturesItem className={ classes } description={
 											currentFeature.getDescription
 												? currentFeature.getDescription()
 												: null
 										}>
-											{ currentFeature.getTitle() }
-										</PlanFeaturesItem>
-									</td>
-									: <td key={ `${ planName }-none` } className="plan-features__table-item"></td>
-							);
-						} )
-					}
-				</tr>
+							{ currentFeature.getTitle() }
+						</PlanFeaturesItem>
+					</td>
+					: <td key={ `${ planName }-none` } className="plan-features__table-item"></td>
 			);
 		} );
 	}
