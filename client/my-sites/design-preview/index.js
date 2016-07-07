@@ -171,8 +171,9 @@ const DesignPreview = React.createClass( {
 			return null;
 		}
 
+		const pathname = this.props.previewPath ? this.props.previewPath : '';
 		const parsed = url.parse( site.options.unmapped_url, true );
-		parsed.pathname = this.props.previewPath ? `/${this.props.previewPath}` : '';
+		parsed.pathname = pathname[ 0 ] === '/' ? pathname : `/${pathname}`;
 		parsed.query.iframe = true;
 		parsed.query.theme_preview = true;
 		if ( site.options && site.options.frame_nonce ) {
