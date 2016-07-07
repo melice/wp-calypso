@@ -8,8 +8,8 @@ import {
 	ROUTE_SET,
 	SECTION_SET,
 	PREVIEW_IS_SHOWING,
-	PREVIEW_SLUG_SET,
-	PREVIEW_SLUG_CLEAR,
+	PREVIEW_PATH_SET,
+	PREVIEW_PATH_CLEAR,
 } from 'state/action-types';
 
 /**
@@ -68,16 +68,16 @@ export function setPreviewShowing( isShowing ) {
 	};
 }
 
-export function setPreviewSlug( slug ) {
+export function setPreviewPath( path ) {
 	return {
-		type: PREVIEW_SLUG_SET,
-		slug,
+		type: PREVIEW_PATH_SET,
+		path,
 	};
 }
 
-export function clearPreviewSlug( siteId ) {
+export function clearPreviewPath( siteId ) {
 	return {
-		type: PREVIEW_SLUG_CLEAR,
+		type: PREVIEW_PATH_CLEAR,
 		siteId
 	};
 }

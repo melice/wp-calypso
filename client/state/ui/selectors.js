@@ -80,13 +80,13 @@ export function isPreviewShowing( state ) {
 }
 
 /**
- * Returns the URL path slug if DesignPreview currently has one.
+ * Returns the URL path if DesignPreview currently has one.
  *
  * @param  {Object}  state Global state tree
- * @return {?String}  The slug or null
+ * @return {?String}  The path or null
  *
  * @see client/components/design-preview
  */
-export function getPreviewSlug( state ) {
-	return get( state.ui, 'currentPreviewSlug', null );
+export function getPreviewPath( state ) {
+	return state.ui.currentPreviewPath;
 }
