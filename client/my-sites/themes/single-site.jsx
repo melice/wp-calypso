@@ -31,7 +31,6 @@ import {
 	help,
 	bindOptionsToDispatch
 } from './theme-options';
-import { getQueryParams, getThemesList } from 'state/themes/themes-list/selectors';
 import sitesFactory from 'lib/sites-list';
 import { FEATURE_CUSTOM_DESIGN } from 'lib/plans/constants';
 import UpgradeNudge from 'my-sites/upgrade-nudge';
@@ -153,8 +152,6 @@ export default connect(
 	state => {
 		const selectedSite = getSelectedSite( state );
 		return {
-			queryParams: getQueryParams( state ),
-			themesList: getThemesList( state ),
 			selectedSite,
 			isJetpack: selectedSite && isJetpackSite( state, selectedSite.ID ),
 			isCustomizable: selectedSite && canCurrentUser( state, selectedSite.ID, 'edit_theme_options' )

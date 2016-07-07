@@ -2,6 +2,7 @@
  * External dependencies
  */
 import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 import { localize } from 'i18n-calypso';
 import pickBy from 'lodash/pickBy';
 import merge from 'lodash/merge';
@@ -14,6 +15,7 @@ import Main from 'components/main';
 import ThemePreview from './theme-preview';
 import ThemesSelection from './themes-selection';
 import PageViewTracker from 'lib/analytics/page-view-tracker';
+import { getQueryParams, getThemesList } from 'state/themes/themes-list/selectors';
 import { addTracking } from './helpers';
 
 const optionShape = PropTypes.shape( {
@@ -118,4 +120,8 @@ const ThemeShowcase = React.createClass( {
 	}
 } );
 
-export default localize( ThemeShowcase );
+export default connect( state => ( {
+	queryParams: getQueryParams( state ),
+	themesList: getThemesList( state )
+} )
+)( localize( ThemeShowcase ) );

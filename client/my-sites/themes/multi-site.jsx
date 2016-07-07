@@ -20,7 +20,6 @@ import {
 	help,
 	bindOptionsToDispatch
 } from './theme-options';
-import { getQueryParams, getThemesList } from 'state/themes/themes-list/selectors';
 import ThemeShowcase from './theme-showcase';
 
 const ThemesMultiSite = wrapThemeOptionsWithSiteSelector( '/design' )( props => (
@@ -41,10 +40,7 @@ const mergeProps = ( stateProps, dispatchProps, ownProps ) => Object.assign(
 );
 
 export default connect(
-	state => ( {
-		queryParams: getQueryParams( state ),
-		themesList: getThemesList( state )
-	} ),
+	null,
 	bindOptionsToDispatch( {
 		preview,
 		purchase,

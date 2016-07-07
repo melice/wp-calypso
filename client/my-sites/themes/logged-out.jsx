@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 /**
  * Internal dependencies
  */
-import { getQueryParams, getThemesList } from 'state/themes/themes-list/selectors';
 import ThemeShowcase from './theme-showcase';
 import {
 	preview,
@@ -30,10 +29,7 @@ const mergeProps = ( stateProps, dispatchProps, ownProps ) => Object.assign(
 );
 
 export default connect(
-	state => ( {
-		queryParams: getQueryParams( state ),
-		themesList: getThemesList( state )
-	} ),
+	null,
 	bindOptionsToDispatch( {
 		signup,
 		preview,
