@@ -57,7 +57,7 @@ class PlanFeatures extends Component {
 						<tr>
 							{ this.renderTopButtons() }
 						</tr>
-						{ this.renderPlanFeatureRows() }
+							{ this.renderPlanFeatureRows() }
 						<tr>
 							{ this.renderBottomButtons() }
 						</tr>
