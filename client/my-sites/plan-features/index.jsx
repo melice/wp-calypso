@@ -171,14 +171,14 @@ class PlanFeatures extends Component {
 			} = properties;
 			const featureKeys = Object.keys( features );
 			const key = featureKeys[ rowIndex ];
-			const classes = classNames( {
-				'is-last-item': rowIndex + 1 === featureKeys.length
+			const classes = classNames( 'plan-features__table-item', {
+				'has-partial-border': rowIndex + 1 < featureKeys.length
 			} );
 			const currentFeature = features[ key ];
 			return (
 				currentFeature
-					? <td key={ `${ planName }-${ key }` } className="plan-features__table-item">
-						<PlanFeaturesItem className={ classes } description={
+					? <td key={ `${ planName }-${ key }` } className={ classes }>
+						<PlanFeaturesItem description={
 											currentFeature.getDescription
 												? currentFeature.getDescription()
 												: null
