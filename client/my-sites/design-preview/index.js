@@ -12,12 +12,12 @@ import url from 'url';
  */
 import config from 'config';
 import WebPreview from 'components/web-preview';
-import { clearPreviewPath } from 'state/ui/actions';
+import { clearPreviewUrl } from 'state/ui/actions';
 import { fetchPreviewMarkup, undoCustomization, clearCustomizations } from 'state/preview/actions';
 import accept from 'lib/accept';
 import { updatePreviewWithChanges } from 'lib/design-preview';
 import layoutFocus from 'lib/layout-focus';
-import { getSelectedSite, getSelectedSiteId, getPreviewPath } from 'state/ui/selectors';
+import { getSelectedSite, getSelectedSiteId, getPreviewUrl } from 'state/ui/selectors';
 
 const debug = debugFactory( 'calypso:design-preview' );
 
@@ -33,8 +33,8 @@ const DesignPreview = React.createClass( {
 		defaultViewportDevice: React.PropTypes.string,
 		// Show close button; same as WebPreview.
 		showClose: React.PropTypes.bool,
-		// Optional URL path (everything after the site); otherwise we use the home page
-		previewPath: React.PropTypes.string,
+		// Optional URL; otherwise we use the home page
+		previewUrl: React.PropTypes.string,
 		// Elements to render on the right side of the toolbar; same as WebPreview.
 		children: React.PropTypes.node,
 		// A function to run when the preview has loaded. Will be passed a ref to the iframe document object.
@@ -47,7 +47,7 @@ const DesignPreview = React.createClass( {
 		fetchPreviewMarkup: React.PropTypes.func.isRequired,
 		undoCustomization: React.PropTypes.func.isRequired,
 		clearCustomizations: React.PropTypes.func.isRequired,
-		clearPreviewPath: React.PropTypes.func.isRequired,
+		clearPreviewUrl: React.PropTypes.func.isRequired,
 	},
 
 	getInitialState() {
@@ -64,7 +64,7 @@ const DesignPreview = React.createClass( {
 			customizations: {},
 			isUnsaved: false,
 			onLoad: noop,
-			previewPath: null,
+			previewUrl: null,
 		};
 	},
 
@@ -130,7 +130,7 @@ const DesignPreview = React.createClass( {
 			return;
 		}
 		debug( 'loading preview with customizations', this.props.customizations );
-		this.props.fetchPreviewMarkup( this.props.selectedSiteId, this.props.previewPath, this.props.customizations );
+		this.props.fetchPreviewMarkup( this.props.selectedSiteId, this.props.previewUrl, this.props.customizations );
 	},
 
 	undoCustomization() {
@@ -147,13 +147,13 @@ const DesignPreview = React.createClass( {
 		if ( this.props.customizations && this.props.isUnsaved ) {
 			return accept( this.translate( 'You have unsaved changes. Are you sure you want to close the preview?' ), accepted => {
 				if ( accepted ) {
-					this.props.clearPreviewPath( this.props.selectedSiteId );
+					this.props.clearPreviewUrl( this.props.selectedSiteId );
 					this.props.clearCustomizations( this.props.selectedSiteId );
 					layoutFocus.set( 'sidebar' );
 				}
 			} );
 		}
-		this.props.clearPreviewPath( this.props.selectedSiteId );
+		this.props.clearPreviewUrl( this.props.selectedSiteId );
 		this.props.clearCustomizations( this.props.selectedSiteId );
 		layoutFocus.set( 'sidebar' );
 	},
@@ -170,10 +170,8 @@ const DesignPreview = React.createClass( {
 		if ( ! site ) {
 			return null;
 		}
-
-		const pathname = this.props.previewPath ? this.props.previewPath : '';
-		const parsed = url.parse( site.options.unmapped_url, true );
-		parsed.pathname = pathname[ 0 ] === '/' ? pathname : `/${pathname}`;
+		const baseUrl = this.props.previewUrl ? this.props.previewUrl : site.options.unmapped_url;
+		const parsed = url.parse( baseUrl, true );
 		delete parsed.search;
 		return parsed;
 	},
@@ -241,7 +239,7 @@ function mapStateToProps( state ) {
 	return {
 		selectedSite,
 		selectedSiteId,
-		previewPath: getPreviewPath( state ),
+		previewUrl: getPreviewUrl( state ),
 		previewMarkup,
 		customizations,
 		isUnsaved,
@@ -250,5 +248,5 @@ function mapStateToProps( state ) {
 
 export default connect(
 	mapStateToProps,
-	{ fetchPreviewMarkup, undoCustomization, clearCustomizations, clearPreviewPath }
+	{ fetchPreviewMarkup, undoCustomization, clearCustomizations, clearPreviewUrl }
 )( DesignPreview );
