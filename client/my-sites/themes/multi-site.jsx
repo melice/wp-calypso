@@ -14,7 +14,10 @@ import {
 	purchase,
 	activate,
 	tryandcustomize,
-	getSheetOptions,
+	separator,
+	info,
+	support,
+	help,
 	bindOptionsToDispatch
 } from './theme-options';
 import { getQueryParams, getThemesList } from 'state/themes/themes-list/selectors';
@@ -31,13 +34,9 @@ const mergeProps = ( stateProps, dispatchProps, ownProps ) => Object.assign(
 	ownProps,
 	stateProps,
 	{
-		options: Object.assign(
-			{},
-			dispatchProps,
-			getSheetOptions()
-		),
+		options: dispatchProps,
 		defaultOption: dispatchProps.tryandcustomize,
-		getScreenshotOption: () => getSheetOptions().info
+		getScreenshotOption: () => dispatchProps.info
 	}
 );
 
@@ -50,7 +49,11 @@ export default connect(
 		preview,
 		purchase,
 		activate,
-		tryandcustomize
+		tryandcustomize,
+		separator,
+		info,
+		support,
+		help,
 	}, 'showcase' ),
 	mergeProps
 )( ThemesMultiSite );
