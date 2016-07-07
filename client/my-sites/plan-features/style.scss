@@ -185,7 +185,6 @@ $plan-features-header-banner-height: 20px;
 }
 
 .plan-features__item {
-	list-style: none;
 	position: relative;
 	margin: 0 24px;
 	padding: 12px 0 12px 30px;
@@ -205,8 +204,7 @@ $plan-features-header-banner-height: 20px;
 .plan-features__item-checkmark {
 	position: absolute;
 	left: 0;
-	top: 50%;
-	transform: translateY(-50%);
+	top: 12px;
 	fill: $blue-wordpress;
 }
 

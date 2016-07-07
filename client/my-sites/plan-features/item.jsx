@@ -30,10 +30,10 @@ export default function PlanFeaturesItem( { description, children, className } )
 	const classes = classNames( 'plan-features__item', className );
 
 	return (
-		<li className={ classes }>
+		<div className={ classes }>
 			<Gridicon className="plan-features__item-checkmark" size={ 18 } icon="checkmark" />
 			{ children }
 			{ renderTipinfo() }
-		</li>
+		</div>
 	);
 }
