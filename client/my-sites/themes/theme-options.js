@@ -77,6 +77,32 @@ export const signup = {
 	getUrl: theme => getSignupUrl( theme )
 };
 
+export const separator = {
+	separator: true
+};
+
+export const info = {
+	label: i18n.translate( 'Info', {
+		comment: 'label for displaying the theme info sheet'
+	} ),
+	getUrl: ( theme, site ) => getDetailsUrl( theme, site ), // TODO: Make this a selector
+};
+
+export const support = {
+	label: i18n.translate( 'Setup' ),
+	getUrl: ( theme, site ) => getSupportUrl( theme, site ),
+	// We don't know where support docs for a given theme on a self-hosted WP install are.
+	hideForSite: ( { isJetpack = false } = {} ) => isJetpack,
+	hideForTheme: theme => ! isPremium( theme )
+};
+
+export const help = {
+	label: i18n.translate( 'Support' ),
+	getUrl: ( theme, site ) => getHelpUrl( theme, site ),
+	// We don't know where support docs for a given theme on a self-hosted WP install are.
+	hideForSite: ( { isJetpack = false } = {} ) => isJetpack,
+};
+
 export const getSheetOptions = ( site = false, isJetpack = false ) => ( {
 	separator: {
 		separator: true

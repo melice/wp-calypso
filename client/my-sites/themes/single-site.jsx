@@ -5,6 +5,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { localize } from 'i18n-calypso';
 import merge from 'lodash/merge';
+import pickBy from 'lodash/pickBy';
 import mapValues from 'lodash/mapValues';
 
 /**
@@ -24,7 +25,10 @@ import {
 	purchase,
 	activate,
 	tryandcustomize,
-	getSheetOptions,
+	separator,
+	info,
+	support,
+	help,
 	bindOptionsToDispatch
 } from './theme-options';
 import { getQueryParams, getThemesList } from 'state/themes/themes-list/selectors';
@@ -116,15 +120,21 @@ const mergeProps = ( stateProps, dispatchProps, ownProps ) => {
 					action: theme => dispatchProps.customize( theme, site, 'showcase' ),
 				}
 				: dispatchProps.preview
-		},
-		getSheetOptions( site, isJetpack )
+		}
 	);
 
-	const boundOptions = mapValues( options, option => Object.assign(
+	const filteredOptions = pickBy( options, option =>
+		! ( option.hideForSite && option.hideForSite( stateProps ) )
+	);
+
+	const boundOptions = mapValues( filteredOptions, option => Object.assign(
 		{},
 		option,
 		option.action
 			? { action: theme => option.action( theme, site ) }
+			: {},
+		option.getUrl
+			? { getUrl: theme => option.getUrl( theme, site ) }
 			: {}
 	) );
 
@@ -156,7 +166,11 @@ export default connect(
 		preview,
 		purchase,
 		activate,
-		tryandcustomize
+		tryandcustomize,
+		separator,
+		info,
+		support,
+		help
 	}, 'showcase' ),
 	mergeProps
 )( localize( ThemesSingleSite ) );
