@@ -229,21 +229,15 @@ $plan-features-header-banner-height: 20px;
 	}
 }
 
-.plan-features__footer {
+.plan-features__actions {
 	padding: 0 24px 24px 24px;
 }
 
-.plan-features__footer-desc {
-	margin: 0;
-	font-size: 14px;
-	color: $gray;
-}
-
-.plan-features__footer-buttons {
+.plan-features__actions-buttons {
 	text-align: center;
 }
 
-.plan-features__footer-button {
+.plan-features__actions-button {
 	width: 100%;
 	margin-top: 8px;
 

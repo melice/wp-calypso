@@ -11,37 +11,37 @@ import React, { PropTypes } from 'react';
 import Button from 'components/button';
 import Gridicon from 'components/gridicon';
 
-const PlanFeaturesFooter = ( { translate, current = false, available = true, onUpgradeClick = noop } ) => {
+const PlanFeaturesActions = ( { translate, current = false, available = true, onUpgradeClick = noop } ) => {
 	let upgradeButton;
 
 	if ( current ) {
 		upgradeButton = (
-			<Button className="plan-features__footer-button is-current" disabled>
+			<Button className="plan-features__actions-button is-current" disabled>
 				<Gridicon size={ 18 } icon="checkmark" />
 				{ translate( 'Your plan' ) }
 			</Button>
 		);
 	} else if ( available ) {
 		upgradeButton = (
-			<Button className="plan-features__footer-button" onClick={ onUpgradeClick } primary>
+			<Button className="plan-features__actions-button" onClick={ onUpgradeClick } primary>
 				{ translate( 'Upgrade' ) }
 			</Button>
 		);
 	}
 
 	return (
-		<footer className="plan-features__footer">
-			<div className="plan-features__footer-buttons">
+		<div className="plan-features__actions">
+			<div className="plan-features__actions-buttons">
 				{ upgradeButton }
 			</div>
-		</footer>
+		</div>
 	);
 };
 
-PlanFeaturesFooter.propTypes = {
+PlanFeaturesActions.propTypes = {
 	current: PropTypes.bool,
 	available: PropTypes.bool,
 	onUpgradeClick: PropTypes.func
 };
 
-export default localize( PlanFeaturesFooter );
+export default localize( PlanFeaturesActions );

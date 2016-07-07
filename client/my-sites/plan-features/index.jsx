@@ -12,7 +12,7 @@ import classNames from 'classnames';
  */
 import PlanFeaturesHeader from './header';
 import PlanFeaturesItem from './item';
-import PlanFeaturesFooter from './footer';
+import PlanFeaturesActions from './actions';
 import { isCurrentPlanPaid, isCurrentSitePlan } from 'state/sites/selectors';
 import { getPlansBySiteId } from 'state/sites/plans/selectors';
 import { getSelectedSiteId } from 'state/ui/selectors';
@@ -129,7 +129,7 @@ class PlanFeatures extends Component {
 			} = properties;
 			return (
 				<td key={ planName } className="plan-features__table-item has-border-bottom">
-					<PlanFeaturesFooter
+					<PlanFeaturesActions
 						current={ current }
 						available = { available }
 						onUpgradeClick={ onUpgradeClick }
@@ -203,7 +203,7 @@ class PlanFeatures extends Component {
 			} = properties;
 			return (
 				<td key={ planName } className="plan-features__table-item has-border-bottom">
-					<PlanFeaturesFooter
+					<PlanFeaturesActions
 						current={ current }
 						available = { available }
 						onUpgradeClick={ onUpgradeClick }
