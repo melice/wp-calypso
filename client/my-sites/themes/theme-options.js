@@ -50,6 +50,7 @@ export const customize = {
 	label: i18n.translate( 'Customize' ),
 	header: i18n.translate( 'Customize on:', { comment: 'label in the dialog for selecting a site for which to customize a theme' } ),
 	action: customizeAction,
+	hideForSite: ( { isCustomizable = false } = {} ) => ! isCustomizable,
 	hideForTheme: theme => ! theme.active
 };
 
@@ -59,6 +60,7 @@ export const tryandcustomize = {
 		comment: 'label in the dialog for opening the Customizer with the theme in preview'
 	} ),
 	action: customizeAction,
+	hideForSite: ( { isCustomizable = false } = {} ) => ! isCustomizable,
 	hideForTheme: theme => theme.active
 };
 

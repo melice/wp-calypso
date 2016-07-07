@@ -109,12 +109,11 @@ const ThemesSingleSite = ( props ) => {
 };
 
 const mergeProps = ( stateProps, dispatchProps, ownProps ) => {
-	const { selectedSite: site, isCustomizable, isJetpack } = stateProps;
+	const { selectedSite: site, isJetpack } = stateProps;
 	const options = merge(
 		{},
 		dispatchProps,
 		{
-			customize: isCustomizable ? dispatchProps.customize : {},
 			preview: isJetpack
 				? {
 					action: theme => dispatchProps.customize( theme, site, 'showcase' ),
