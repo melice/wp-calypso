@@ -5,8 +5,6 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { localize } from 'i18n-calypso';
 import pickBy from 'lodash/pickBy';
-import merge from 'lodash/merge';
-import get from 'lodash/get';
 
 /**
  * Internal dependencies
@@ -58,24 +56,12 @@ const ThemeShowcase = React.createClass( {
 	},
 
 	render() {
+		const { options, defaultOption, getScreenshotOption } = this.props;
+
 		// If a preview action is passed, use that. Otherwise, use our own.
-		const previewAction = get(
-			this.props.options,
-			[ 'preview', 'action' ],
-			theme => this.togglePreview( theme )
-		);
-		const buttonOptions = merge(
-			{},
-			this.props.options,
-			{ preview: {
-				label: this.props.translate( 'Live demo', {
-					comment: 'label for previewing the theme demo website'
-				} ),
-				action: previewAction
-			} }
-		);
-		const { defaultOption } = this.props;
-		const { getScreenshotOption } = this.props;
+		if ( options.preview && ! options.preview.action ) {
+			options.preview.action = theme => this.togglePreview( theme );
+		}
 
 		return (
 			<Main className="themes">
@@ -108,7 +94,7 @@ const ThemeShowcase = React.createClass( {
 					} }
 					getOptions={ function( theme ) {
 						return pickBy(
-							addTracking( buttonOptions ),
+							addTracking( options ),
 							option => ! ( option.hideForTheme && option.hideForTheme( theme ) )
 						); } }
 					trackScrollPage={ this.props.trackScrollPage }
