@@ -4,7 +4,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { localize } from 'i18n-calypso';
-import merge from 'lodash/merge';
 import pickBy from 'lodash/pickBy';
 import mapValues from 'lodash/mapValues';
 
@@ -109,17 +108,11 @@ const ThemesSingleSite = ( props ) => {
 
 const mergeProps = ( stateProps, dispatchProps, ownProps ) => {
 	const { selectedSite: site, isJetpack } = stateProps;
-	const options = merge(
-		{},
-		dispatchProps,
-		{
-			preview: isJetpack
-				? {
-					action: theme => dispatchProps.customize( theme, site, 'showcase' ),
-				}
-				: dispatchProps.preview
-		}
-	);
+	const options = dispatchProps;
+
+	if ( isJetpack ) {
+		options.preview.action = theme => dispatchProps.customize.action( theme, site, 'showcase' );
+	}
 
 	const filteredOptions = pickBy( options, option =>
 		! ( option.hideForSite && option.hideForSite( stateProps ) )
