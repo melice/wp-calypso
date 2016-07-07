@@ -166,7 +166,7 @@ const DesignPreview = React.createClass( {
 		event.preventDefault();
 	},
 
-	getPreviewUrl( site ) {
+	getParsedPreviewUrl( site ) {
 		if ( ! site ) {
 			return null;
 		}
@@ -174,13 +174,28 @@ const DesignPreview = React.createClass( {
 		const pathname = this.props.previewPath ? this.props.previewPath : '';
 		const parsed = url.parse( site.options.unmapped_url, true );
 		parsed.pathname = pathname[ 0 ] === '/' ? pathname : `/${pathname}`;
+		delete parsed.search;
+		return parsed;
+	},
+
+	getPreviewUrl( site ) {
+		if ( ! site ) {
+			return null;
+		}
+		const parsed = this.getParsedPreviewUrl( site );
 		parsed.query.iframe = true;
 		parsed.query.theme_preview = true;
 		if ( site.options && site.options.frame_nonce ) {
 			parsed.query[ 'frame-nonce' ] = site.options.frame_nonce;
 		}
-		delete parsed.search;
 		return url.format( parsed ) + '&' + this.state.previewCount;
+	},
+
+	getExternalUrl( site ) {
+		if ( ! site ) {
+			return null;
+		}
+		return url.format( this.getParsedPreviewUrl( site ) );
 	},
 
 	render() {
@@ -196,7 +211,7 @@ const DesignPreview = React.createClass( {
 			<WebPreview
 				className={ this.props.className }
 				previewUrl={ useEndpoint ? null : previewUrl }
-				externalUrl={ previewUrl }
+				externalUrl={ this.getExternalUrl( this.props.selectedSite ) }
 				showExternal={ true }
 				showClose={ this.props.showClose }
 				showPreview={ this.props.showPreview }
