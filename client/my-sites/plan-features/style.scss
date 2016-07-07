@@ -16,6 +16,15 @@ $plan-features-header-banner-height: 20px;
 	border-left: solid 1px lighten( $gray, 27% );
 	background-color: lighten( $gray, 35% );
 	position: relative;
+	display: none;
+
+	@include breakpoint( ">1040px" ) {
+		display: table-cell;
+	}
+}
+
+.plan-features__table-item.is-selected {
+	display: table-cell;
 }
 
 .plan-features__table-item.has-partial-border {
