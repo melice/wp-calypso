@@ -3,7 +3,7 @@
  */
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { get, map, reduce, noop } from 'lodash';
+import { map, reduce, noop } from 'lodash';
 import page from 'page';
 import classNames from 'classnames';
 
@@ -37,20 +37,6 @@ import {
 import { planItem as getCartItemForPlan } from 'lib/cart-values/cart-items';
 
 class PlanFeatures extends Component {
-	constructor( props ) {
-		super( props );
-		this.state = {
-			selectedPlan: get( props.plans, '0', null )
-		};
-	}
-
-	componentWillReceiveProps( nextProps ) {
-		if ( nextProps.plans !== this.props.plans ) {
-			this.setState( {
-				selectedPlan: get( nextProps.plans, '0', null )
-			} );
-		}
-	}
 
 	render() {
 		const { isPlaceholder } = this.props;
@@ -97,9 +83,7 @@ class PlanFeatures extends Component {
 				popular,
 				rawPrice
 			} = properties;
-			const classes = classNames( 'plan-features__table-item', 'has-border-top', {
-				'is-selected': this.state.selectedPlan === planName
-			} );
+			const classes = classNames( 'plan-features__table-item', 'has-border-top' );
 			return (
 				<td key={ planName } className={ classes }>
 					<PlanFeaturesHeader
@@ -126,9 +110,7 @@ class PlanFeatures extends Component {
 				planName,
 				planConstantObj
 			} = properties;
-			const classes = classNames( 'plan-features__table-item', {
-				'is-selected': this.state.selectedPlan === planName
-			} );
+			const classes = classNames( 'plan-features__table-item' );
 			return (
 				<td key={ planName } className={ classes }>
 					<p className="plan-features__description">
@@ -149,9 +131,7 @@ class PlanFeatures extends Component {
 				onUpgradeClick,
 				planName
 			} = properties;
-			const classes = classNames( 'plan-features__table-item', 'has-border-bottom', {
-				'is-selected': this.state.selectedPlan === planName
-			} );
+			const classes = classNames( 'plan-features__table-item', 'has-border-bottom' );
 			return (
 				<td key={ planName } className={ classes }>
 					<PlanFeaturesActions
@@ -198,8 +178,7 @@ class PlanFeatures extends Component {
 			const featureKeys = Object.keys( features );
 			const key = featureKeys[ rowIndex ];
 			const classes = classNames( 'plan-features__table-item', {
-				'has-partial-border': rowIndex + 1 < featureKeys.length,
-				'is-selected': this.state.selectedPlan === planName
+				'has-partial-border': rowIndex + 1 < featureKeys.length
 			} );
 			const currentFeature = features[ key ];
 			return (
@@ -228,9 +207,7 @@ class PlanFeatures extends Component {
 				onUpgradeClick,
 				planName
 			} = properties;
-			const classes = classNames( 'plan-features__table-item', 'has-border-bottom', {
-				'is-selected': this.state.selectedPlan === planName
-			} );
+			const classes = classNames( 'plan-features__table-item', 'has-border-bottom' );
 			return (
 				<td key={ planName } className={ classes }>
 					<PlanFeaturesActions

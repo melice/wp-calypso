@@ -1,7 +1,12 @@
 $plan-features-header-banner-height: 20px;
 
-.plan-features{
-	margin: 0 -16px;
+.plan-features {
+	overflow-x: auto;
+	margin-left: -16px;
+
+	@include breakpoint( ">480px" ) {
+		margin: 0 -16px;
+	}
 }
 
 .plan-features__table {
@@ -16,11 +21,7 @@ $plan-features-header-banner-height: 20px;
 	border-left: solid 1px lighten( $gray, 27% );
 	background-color: lighten( $gray, 35% );
 	position: relative;
-	display: none;
-
-	@include breakpoint( ">1040px" ) {
-		display: table-cell;
-	}
+	width: 300px;
 }
 
 .plan-features__table-item.is-selected {
