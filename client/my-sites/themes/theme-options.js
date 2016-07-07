@@ -105,31 +105,6 @@ export const help = {
 	hideForSite: ( { isJetpack = false } = {} ) => isJetpack,
 };
 
-export const getSheetOptions = ( site = false, isJetpack = false ) => ( {
-	separator: {
-		separator: true
-	},
-	info: {
-		label: i18n.translate( 'Info', {
-			comment: 'label for displaying the theme info sheet'
-		} ),
-		getUrl: theme => getDetailsUrl( theme, site ), // TODO: Make this a selector
-	},
-	support: ! isJetpack // We don't know where support docs for a given theme on a self-hosted WP install are.
-		? {
-			label: i18n.translate( 'Setup' ),
-			getUrl: theme => getSupportUrl( theme, site ),
-			hideForTheme: theme => ! isPremium( theme )
-		}
-		: {},
-	help: ! isJetpack // We don't know where support forums for a given theme on a self-hosted WP install are.
-		? {
-			label: i18n.translate( 'Support' ),
-			getUrl: theme => getHelpUrl( theme, site )
-		}
-		: {}
-} );
-
 export function bindOptionsToDispatch( options, source ) {
 	return dispatch => mapValues( options, option => Object.assign(
 		{},
