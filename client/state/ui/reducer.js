@@ -10,8 +10,8 @@ import {
 	SELECTED_SITE_SET,
 	SECTION_SET,
 	PREVIEW_IS_SHOWING,
-	PREVIEW_PATH_CLEAR,
-	PREVIEW_PATH_SET,
+	PREVIEW_URL_CLEAR,
+	PREVIEW_URL_SET,
 	SERIALIZE,
 	DESERIALIZE,
 } from 'state/action-types';
@@ -88,11 +88,11 @@ export const isPreviewShowing = createReducer( false, {
 		isShowing !== undefined ? isShowing : state,
 } );
 
-export function currentPreviewPath( state = null, action ) {
+export function currentPreviewUrl( state = null, action ) {
 	switch ( action.type ) {
-		case PREVIEW_PATH_SET:
-			return action.path;
-		case PREVIEW_PATH_CLEAR:
+		case PREVIEW_URL_SET:
+			return action.url;
+		case PREVIEW_URL_CLEAR:
 			return null;
 	}
 	return state;
@@ -103,7 +103,7 @@ const reducer = combineReducers( {
 	isLoading,
 	hasSidebar,
 	isPreviewShowing,
-	currentPreviewPath,
+	currentPreviewUrl,
 	selectedSiteId,
 	recentlySelectedSiteIds,
 	guidedTour,
