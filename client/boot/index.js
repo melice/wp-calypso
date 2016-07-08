@@ -366,16 +366,6 @@ function reduxStoreReady( reduxStore ) {
 	//TODO: remove this one when notices are reduxified - it is for old notices
 	page( '*', require( 'notices' ).clearNoticesOnNavigation );
 
-	// show first view for section
-	page( '*', function( context, next ) {
-		const section = context.store.getState().ui.section;
-		const sameSection = some( section.paths, path => startsWith( context.prevPath, path ) );
-		if ( ! sameSection ) {
-			context.store.dispatch( showFirstView( { view: section.name } ) );
-		}
-		next();
-	} );
-
 	if ( config.isEnabled( 'olark' ) ) {
 		require( 'lib/olark' );
 	}

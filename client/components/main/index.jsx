@@ -10,8 +10,7 @@ import classnames from 'classnames';
 /**
  * Internal dependencies
  */
-import { getSectionName } from 'state/ui/selectors';
-import { isViewVisible } from 'state/first-view/selectors';
+import { shouldViewBeVisible } from 'state/first-view/selectors';
 
 const Main = React.createClass( {
 	displayName: 'Main',
@@ -31,10 +30,8 @@ const Main = React.createClass( {
 
 export default connect(
 	( state ) => {
-		const sectionName = getSectionName( state );
-
 		return {
-			isFirstViewVisible: isViewVisible( state, sectionName ),
+			isFirstViewVisible: shouldViewBeVisible( state ),
 		};
 	},
 	null

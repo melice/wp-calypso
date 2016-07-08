@@ -14,7 +14,7 @@ import classNames from 'classnames';
 import Button from 'components/button';
 import RootChild from 'components/root-child';
 import { getSectionName } from 'state/ui/selectors';
-import { isViewEnabled, isViewVisible } from 'state/first-view/selectors';
+import { shouldViewBeVisible } from 'state/first-view/selectors';
 import * as FirstViewActions from 'state/first-view/actions';
 
 // component to avoid having a wrapper element for the transition
@@ -112,7 +112,7 @@ export default connect(
 
 		return {
 			sectionName: sectionName,
-			isVisible: isViewVisible( state, sectionName ),
+			isVisible: shouldViewBeVisible( state ),
 		};
 	},
 	dispatch => bindActionCreators( FirstViewActions, dispatch )

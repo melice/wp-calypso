@@ -2,7 +2,6 @@
  * External dependencies
  */
 import debugFactory from 'debug';
-import moment from 'moment';
 import omit from 'lodash/omit';
 import union from 'lodash/union';
 
@@ -15,8 +14,6 @@ import {
 	firstViewSchema
 } from './schema';
 
-import { FIRST_VIEW_START_DATES } from './constants';
-
 import {
 	DESERIALIZE,
 	SERIALIZE,
@@ -24,36 +21,32 @@ import {
 	FIRST_VIEW_ENABLE,
 	FIRST_VIEW_HIDE,
 	FIRST_VIEW_SHOW,
+	ROUTE_SET,
 } from 'state/action-types';
 
 const debug = debugFactory( 'calypso:first-view' );
+const initialState = { disabled: [], hidden: [] };
 
-export function firstView( state = { disabled: [], visible: [] }, action ) {
+export function firstView( state = initialState, action ) {
 	switch ( action.type ) {
 
 		case DESERIALIZE: {
 			// only 'disabled' state is persisted
-			const newState = omit( state, 'visible' );
+			const newState = omit( state, 'hidden' );
 			if ( isValidStateWithSchema( newState, firstViewSchema ) ) {
-				return Object.assign( {}, newState, { disabled: [], visible: [] } );
+				return Object.assign( {}, newState, { hidden: [] } );
 			}
 			debug( 'INVALID firstView state during DESERIALIZE', newState );
-			return {
-				disabled: [],
-				visible: [],
-			};
+			return initialState;
 		}
 
 		case SERIALIZE: {
-			const newState = omit( state, 'visible' );
+			const newState = omit( state, 'hidden' );
 			if ( isValidStateWithSchema( newState, firstViewSchema ) ) {
-				return Object.assign( {}, newState, { disabled: [], visible: [] } );
+				return Object.assign( {}, newState, { disabled: [] } );
 			}
 			debug( 'INVALID firstView state during SERIALIZE', newState );
-			return {
-				disabled: [],
-				visible: [],
-			};
+			return initialState;
 		}
 
 		case FIRST_VIEW_ENABLE:
@@ -68,31 +61,28 @@ export function firstView( state = { disabled: [], visible: [] }, action ) {
 			return state;
 
 		case FIRST_VIEW_HIDE:
+			const hidden = union( state.hidden, [ action.view ] );
+
 			const disabled = action.enabled
 				? state.disabled.filter( view => view !== action.view )
 				: union( state.disabled, [ action.view ] );
 
 			return Object.assign( {}, state, {
-				visible: state.visible.filter( view => view !== action.view ),
-				disabled
+				hidden,
+				disabled,
 			} );
 
+		// I don't think we actually need this
 		case FIRST_VIEW_SHOW:
-			const isViewDisabled = ( -1 !== state.disabled.indexOf( action.view ) );
-			let isUserEligible = true;
+			return Object.assign( {}, state, {
+				hidden: state.hidden.filter( view => view !== action.view ),
+			} );
 
-			// Check user-creation date if a user is provided
-			if ( action.user ) {
-				const userCreated = moment( action.user.get().date );
-				if ( moment( FIRST_VIEW_START_DATES[ action.view ] ).isAfter( userCreated ) ) {
-					isUserEligible = false;
-				}
-			}
-
-			if ( action.force || ( ! isViewDisabled &&  isUserEligible ) ) {
-				return Object.assign( {}, state, { visible: state.visible.concat( action.view ), lastVisible: action.view } );
-			}
-			return state;
+		// This is necessary to show the first view again when we go back to a section in a single session
+		case ROUTE_SET:
+			return Object.assign( {}, state, {
+				hidden: []
+			} );
 	}
 	return state;
 }
