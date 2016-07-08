@@ -12,6 +12,14 @@ export default function( args, url ) {
 		throw new Error( 'addQueryArgs expects the second argument to be a string.' );
 	}
 
+	// Remove any undefined query args
+	args = Object.keys( args ).reduce( ( defined, key ) => {
+		if ( args[ key ] !== undefined && args[ key ] !== null ) {
+			defined[ key ] = args[ key ];
+		}
+		return defined;
+	}, {} );
+
 	// Build new query object for url
 	const parsedUrl = urlModule.parse( url, true );
 	let query = parsedUrl.query || {};
