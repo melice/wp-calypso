@@ -30,7 +30,6 @@ import { getSiteSlug } from 'state/sites/selectors';
 import { isPremium, getForumUrl } from 'my-sites/themes/helpers';
 import ThanksModal from 'my-sites/themes/thanks-modal';
 import QueryCurrentTheme from 'components/data/query-current-theme';
-import { getCurrentTheme } from 'state/themes/current-theme/selectors';
 import ThemesSiteSelectorModal from 'my-sites/themes/themes-site-selector-modal';
 import {
 	signup,
@@ -65,7 +64,6 @@ const ThemeSheet = React.createClass( {
 		// Connected props
 		selectedSite: React.PropTypes.object,
 		siteSlug: React.PropTypes.string,
-		currentTheme: React.PropTypes.object,
 		backPath: React.PropTypes.string,
 	},
 
@@ -83,11 +81,6 @@ const ThemeSheet = React.createClass( {
 
 	componentDidMount() {
 		window.scroll( 0, 0 );
-	},
-
-	isActive() {
-		const { id, currentTheme } = this.props;
-		return currentTheme && currentTheme.id === id;
 	},
 
 	onPrimaryClick() {
@@ -302,7 +295,7 @@ const ThemeSheet = React.createClass( {
 	renderSheet() {
 		let actionTitle = <span className="theme__sheet-button-placeholder">loading......</span>;
 		actionTitle = this.props.options.default.label;
-		if ( ! this.isActive() && this.props.name ) {
+		if ( ! this.props.active && this.props.name ) {
 			actionTitle = i18n.translate( 'Pick this design' );
 		}
 
@@ -327,7 +320,7 @@ const ThemeSheet = React.createClass( {
 							backText={ i18n.translate( 'All Themes' ) }>
 					<Button className="theme__sheet-primary-button" onClick={ this.onPrimaryClick }>
 						{ actionTitle }
-						{ ! this.isActive() && priceElement }
+						{ ! this.props.active && priceElement }
 					</Button>
 				</HeaderCake>
 				<div className="theme__sheet-columns">
@@ -390,9 +383,8 @@ export default connect(
 	( state ) => {
 		const selectedSite = getSelectedSite( state );
 		const siteSlug = selectedSite ? getSiteSlug( state, selectedSite.ID ) : '';
-		const currentTheme = getCurrentTheme( state, selectedSite && selectedSite.ID );
 		const backPath = getBackPath( state );
-		return { selectedSite, siteSlug, currentTheme, backPath };
+		return { selectedSite, siteSlug, backPath };
 	},
 	bindOptionsToDispatch( {
 		signup,
