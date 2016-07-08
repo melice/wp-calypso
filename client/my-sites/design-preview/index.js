@@ -171,6 +171,7 @@ const DesignPreview = React.createClass( {
 
 	getPreviewUrl() {
 		if ( ! this.props.selectedSiteUrl && ! this.props.previewUrl ) {
+			debug( 'no preview url and no site url were found for this site' );
 			return null;
 		}
 		const baseUrl = this.props.previewUrl || this.props.selectedSiteUrl;
@@ -181,7 +182,9 @@ const DesignPreview = React.createClass( {
 		if ( this.props.selectedSiteNonce ) {
 			parsed.query[ 'frame-nonce' ] = this.props.selectedSiteNonce;
 		}
-		return url.format( parsed ) + '&' + this.state.previewCount;
+		const previewUrl = url.format( parsed ) + '&' + this.state.previewCount;
+		debug( 'using this preview url', previewUrl );
+		return previewUrl;
 	},
 
 	getExternalUrl() {
@@ -192,6 +195,7 @@ const DesignPreview = React.createClass( {
 		const useEndpoint = config.isEnabled( 'preview-endpoint' );
 
 		if ( ! this.props.selectedSite || ! this.props.selectedSite.is_previewable ) {
+			debug( 'a preview is not available for this site' );
 			return null;
 		}
 
@@ -222,6 +226,9 @@ function mapStateToProps( state ) {
 		return {
 			selectedSite,
 			selectedSiteId,
+			selectedSiteUrl: getSiteOption( state, selectedSiteId, 'unmapped_url' ),
+			selectedSiteNonce: getSiteOption( state, selectedSiteId, 'frame_nonce' ),
+			previewUrl: getPreviewUrl( state ),
 		};
 	}
 
