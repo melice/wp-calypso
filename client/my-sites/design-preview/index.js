@@ -19,6 +19,7 @@ import { updatePreviewWithChanges } from 'lib/design-preview';
 import layoutFocus from 'lib/layout-focus';
 import { getSelectedSite, getSelectedSiteId, getPreviewUrl } from 'state/ui/selectors';
 import { getSiteOption } from 'state/sites/selectors';
+import { getPreviewMarkup, getPreviewCustomizations, isPreviewUnsaved } from 'state/preview/selectors';
 
 const debug = debugFactory( 'calypso:design-preview' );
 
@@ -222,26 +223,15 @@ function mapStateToProps( state ) {
 	const selectedSite = getSelectedSite( state );
 	const selectedSiteId = getSelectedSiteId( state );
 
-	if ( ! state.preview || ! state.preview[ selectedSiteId ] ) {
-		return {
-			selectedSite,
-			selectedSiteId,
-			selectedSiteUrl: getSiteOption( state, selectedSiteId, 'unmapped_url' ),
-			selectedSiteNonce: getSiteOption( state, selectedSiteId, 'frame_nonce' ),
-			previewUrl: getPreviewUrl( state ),
-		};
-	}
-
-	const { previewMarkup, customizations, isUnsaved } = state.preview[ selectedSiteId ];
 	return {
 		selectedSite,
 		selectedSiteId,
 		selectedSiteUrl: getSiteOption( state, selectedSiteId, 'unmapped_url' ),
 		selectedSiteNonce: getSiteOption( state, selectedSiteId, 'frame_nonce' ),
 		previewUrl: getPreviewUrl( state ),
-		previewMarkup,
-		customizations,
-		isUnsaved,
+		previewMarkup: getPreviewMarkup( state, selectedSiteId ),
+		customizations: getPreviewCustomizations( state, selectedSiteId ),
+		isUnsaved: isPreviewUnsaved( state, selectedSiteId ),
 	};
 }
 
