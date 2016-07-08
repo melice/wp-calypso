@@ -18,6 +18,7 @@ import accept from 'lib/accept';
 import { updatePreviewWithChanges } from 'lib/design-preview';
 import layoutFocus from 'lib/layout-focus';
 import { getSelectedSite, getSelectedSiteId, getPreviewUrl } from 'state/ui/selectors';
+import { getSiteOption } from 'state/sites/selectors';
 
 const debug = debugFactory( 'calypso:design-preview' );
 
@@ -33,17 +34,19 @@ const DesignPreview = React.createClass( {
 		defaultViewportDevice: React.PropTypes.string,
 		// Show close button; same as WebPreview.
 		showClose: React.PropTypes.bool,
-		// Optional URL; otherwise we use the home page
-		previewUrl: React.PropTypes.string,
 		// Elements to render on the right side of the toolbar; same as WebPreview.
 		children: React.PropTypes.node,
 		// A function to run when the preview has loaded. Will be passed a ref to the iframe document object.
 		onLoad: React.PropTypes.func,
 		// These are all provided by the state
+		selectedSiteUrl: React.PropTypes.string,
+		selectedSiteNonce: React.PropTypes.string,
+		selectedSite: React.PropTypes.object,
+		selectedSiteId: React.PropTypes.number,
+		previewUrl: React.PropTypes.string,
 		previewMarkup: React.PropTypes.string,
 		customizations: React.PropTypes.object,
 		isUnsaved: React.PropTypes.bool,
-		selectedSiteId: React.PropTypes.number,
 		fetchPreviewMarkup: React.PropTypes.func.isRequired,
 		undoCustomization: React.PropTypes.func.isRequired,
 		clearCustomizations: React.PropTypes.func.isRequired,
@@ -166,31 +169,31 @@ const DesignPreview = React.createClass( {
 		event.preventDefault();
 	},
 
-	getParsedPreviewUrl( site ) {
-		if ( ! site && ! this.props.previewUrl ) {
+	getParsedPreviewUrl() {
+		if ( ! this.props.selectedSiteUrl && ! this.props.previewUrl ) {
 			return null;
 		}
-		const baseUrl = this.props.previewUrl ? this.props.previewUrl : site.options.unmapped_url;
+		const baseUrl = this.props.previewUrl ? this.props.previewUrl : this.props.selectedSiteUrl;
 		const parsed = url.parse( baseUrl, true );
 		delete parsed.search;
 		return parsed;
 	},
 
-	getPreviewUrl( site ) {
-		const parsed = this.getParsedPreviewUrl( site );
+	getPreviewUrl() {
+		const parsed = this.getParsedPreviewUrl();
 		if ( ! parsed ) {
 			return null;
 		}
 		parsed.query.iframe = true;
 		parsed.query.theme_preview = true;
-		if ( site && site.options.frame_nonce ) {
-			parsed.query[ 'frame-nonce' ] = site.options.frame_nonce;
+		if ( this.props.selectedSiteNonce ) {
+			parsed.query[ 'frame-nonce' ] = this.props.selectedSiteNonce;
 		}
 		return url.format( parsed ) + '&' + this.state.previewCount;
 	},
 
-	getExternalUrl( site ) {
-		const parsed = this.getParsedPreviewUrl( site );
+	getExternalUrl() {
+		const parsed = this.getParsedPreviewUrl();
 		if ( ! parsed ) {
 			return null;
 		}
@@ -204,13 +207,13 @@ const DesignPreview = React.createClass( {
 			return null;
 		}
 
-		const previewUrl = this.getPreviewUrl( this.props.selectedSite );
+		const previewUrl = this.getPreviewUrl();
 
 		return (
 			<WebPreview
 				className={ this.props.className }
 				previewUrl={ useEndpoint ? null : previewUrl }
-				externalUrl={ this.getExternalUrl( this.props.selectedSite ) }
+				externalUrl={ this.getExternalUrl() }
 				showExternal={ true }
 				showClose={ this.props.showClose }
 				showPreview={ this.props.showPreview }
@@ -240,6 +243,8 @@ function mapStateToProps( state ) {
 	return {
 		selectedSite,
 		selectedSiteId,
+		selectedSiteUrl: getSiteOption( state, selectedSiteId, 'unmapped_url' ),
+		selectedSiteNonce: getSiteOption( state, selectedSiteId, 'frame_nonce' ),
 		previewUrl: getPreviewUrl( state ),
 		previewMarkup,
 		customizations,
