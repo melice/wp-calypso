@@ -3,15 +3,6 @@ import PureRenderMixin from 'react-pure-render/mixin';
 import classNames from 'classnames';
 import crypto from 'crypto';
 
-import {
-	firstValid,
-	hardTruncation,
-	shortEnough
-} from '../helpers';
-
-const TITLE_LENGTH = 52;
-const DESCRIPTION_LENGTH = 167;
-
 const baseDomain = url =>
 	url
 		.replace( /^[^/]+[/]*/, '' ) // strip leading protocol
@@ -25,16 +16,6 @@ const blavatarUrl = slug => {
 
 	return `https://secure.gravatar.com/blavatar/${ slugHash }?s=512`;
 };
-
-const twitterTitle = firstValid(
-	shortEnough( TITLE_LENGTH ),
-	hardTruncation( TITLE_LENGTH )
-);
-
-const twitterDesription = firstValid(
-	shortEnough( DESCRIPTION_LENGTH ),
-	hardTruncation( DESCRIPTION_LENGTH )
-);
 
 export const TwitterPreview = React.createClass( {
 	mixins: [ PureRenderMixin ],
@@ -60,10 +41,10 @@ export const TwitterPreview = React.createClass( {
 				</div>
 				<div className="twitter-card-preview__body">
 					<div className="twitter-card-preview__title">
-						{ twitterTitle( title || '' ) }
+						{ title || '' }
 					</div>
 					<div className="twitter-card-preview__description">
-						{ twitterDesription( description || '' ) }
+						{ description || '' }
 					</div>
 					<div className="twitter-card-preview__url">
 						{ baseDomain( url ) }
