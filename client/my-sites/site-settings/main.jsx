@@ -2,6 +2,7 @@
  * External dependencies
  */
 import React, { PropTypes, Component } from 'react';
+import { connect } from 'react-redux';
 import debugFactory from 'debug';
 import i18n from 'i18n-calypso';
 
@@ -12,6 +13,9 @@ import config from 'config';
 import SectionNav from 'components/section-nav';
 import NavTabs from 'components/section-nav/tabs';
 import NavItem from 'components/section-nav/item';
+import notices from 'notices';
+import QuerySitePurchases from 'components/data/query-site-purchases';
+import { getSitePurchases, hasLoadedSitePurchasesFromServer, getPurchasesError } from 'state/purchases/selectors';
 import GeneralSettings from './section-general';
 import WritingSettings from './form-writing';
 import DiscussionSettings from './section-discussion';
@@ -49,9 +53,15 @@ export class SiteSettingsComponent extends Component {
 		this.props.sites.off( 'change', this.updateSite );
 	}
 
+	componentWillReceiveProps( nextProps ) {
+		if ( nextProps.purchasesError ) {
+			notices.error( nextProps.purchasesError );
+		}
+	}
+
 	getImportPath() {
-		var { site } = this.state;
-		let path = '/settings/import';
+		const { site } = this.state,
+			path = '/settings/import';
 
 		if ( site.jetpack ) {
 			return `${ site.options.admin_url }import.php`;
@@ -61,7 +71,7 @@ export class SiteSettingsComponent extends Component {
 	}
 
 	getExportPath() {
-		var { site } = this.state;
+		const { site } = this.state;
 		return site.jetpack
 			? `${ site.options.admin_url }export.php`
 			: `/settings/export/${ site.slug }`;
@@ -82,13 +92,12 @@ export class SiteSettingsComponent extends Component {
 
 	getSections() {
 		const { site } = this.state;
-		const { purchases, context } = this.props;
 
 		return {
 			general: (
-				<GeneralSettings
-					site={ site }
-					purchases={ purchases } />
+				<GeneralSettings site={ site }
+					sitePurchases={ this.props.sitePurchases }
+					hasLoadedSitePurchasesFromServer={ this.props.hasLoadedSitePurchasesFromServer } />
 			),
 			writing: <WritingSettings site={ site } />,
 			discussion: <DiscussionSettings site={ site } />,
@@ -96,8 +105,8 @@ export class SiteSettingsComponent extends Component {
 			analytics: <AnalyticsSettings site={ site } />,
 			seo: <SeoSettings site={ site } />,
 			'import': <ImportSettings site={ site } />,
-			'export': <ExportSettings site={ site } store={ context.store } />,
-			guidedTransfer: <GuidedTransfer store={ context.store } />
+			'export': <ExportSettings site={ site }/>,
+			guidedTransfer: <GuidedTransfer />
 		};
 	}
 
@@ -195,6 +204,7 @@ export class SiteSettingsComponent extends Component {
 					<SidebarNavigation />
 
 					{ this.renderSectioNav( site ) }
+					{ site && <QuerySitePurchases siteId={ site.ID } /> }
 					{ site && settingsSection[ this.props.section ] }
 				</div>
 			</section>
@@ -208,10 +218,19 @@ export class SiteSettingsComponent extends Component {
 
 SiteSettingsComponent.propTypes = {
 	section: PropTypes.string,
-	site: PropTypes.object,
 	sites: PropTypes.object
 };
 
 SiteSettingsComponent.defaultProps = {
-	posts: 'general'
+	section: 'general'
 };
+
+export default connect(
+	( state, props ) => {
+		return {
+			hasLoadedSitePurchasesFromServer: hasLoadedSitePurchasesFromServer( state ),
+			purchasesError: getPurchasesError( state ),
+			sitePurchases: getSitePurchases( state )
+		};
+	}
+)( SiteSettingsComponent );

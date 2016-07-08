@@ -1,6 +1,7 @@
 /**
  * External dependencies
  */
+import { connect } from 'react-redux';
 import React from 'react';
 import filter from 'lodash/filter';
 
@@ -9,8 +10,8 @@ import filter from 'lodash/filter';
  */
 import CompactCard from 'components/card/compact';
 import DeleteSiteWarningDialog from 'my-sites/site-settings/delete-site-warning-dialog';
-import PurchasesStore from 'lib/purchases/store';
-import notices from 'notices';
+import QuerySitePurchases from 'components/data/query-site-purchases';
+import { getSitePurchases, isFetchingSitePurchases } from 'state/purchases/selectors';
 import config from 'config';
 import { tracks } from 'lib/analytics';
 
@@ -24,22 +25,16 @@ module.exports = React.createClass( {
 	displayName: 'DeleteSite',
 
 	propTypes: {
-		purchases: React.PropTypes.object.isRequired,
+		sitePurchases: React.PropTypes.array.isRequired,
+		hasLoadedSitePurchasesFromServer: React.PropTypes.bool.isRequired,
 		site: React.PropTypes.object.isRequired
 	},
 
 	getInitialState() {
 		return {
 			showDialog: false,
-			showStartOverDialog: false,
-			sitePurchases: PurchasesStore.getBySite( this.props.site.ID )
+			showStartOverDialog: false
 		};
-	},
-
-	componentWillReceiveProps( nextProps ) {
-		if ( nextProps.purchases.error ) {
-			notices.error( nextProps.purchases.error );
-		}
 	},
 
 	render() {
@@ -54,7 +49,7 @@ module.exports = React.createClass( {
 			deleteSite: this.translate( 'Delete Site' )
 		};
 
-		if ( this.props.purchases.isFetchingSitePurchases ) {
+		if ( ! this.props.hasLoadedSitePurchasesFromServer ) {
 			return null;
 		}
 
@@ -120,7 +115,7 @@ module.exports = React.createClass( {
 
 	checkForSubscriptions( event ) {
 		trackDeleteSiteOption( 'delete-site' );
-		const activeSubscriptions = filter( this.props.purchases.data, 'active' );
+		const activeSubscriptions = filter( this.props.sitePurchases, 'active' );
 
 		if ( ! activeSubscriptions.length ) {
 			return true;

@@ -77,10 +77,7 @@ export default {
 
 		renderPage(
 			context,
-			<ManagePurchaseData
-				component={ CancelPrivateRegistration }
-				purchaseId={ context.params.purchaseId }
-				sites={ sites } />
+			<CancelPrivateRegistration purchaseId={ context.params.purchaseId } sites={ sites } />
 		);
 	},
 

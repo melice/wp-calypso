@@ -1,26 +1,26 @@
 /**
  * External Dependencies
  */
-import ReactDom from 'react-dom';
-import React from 'react';
-import page from 'page';
 import i18n from 'i18n-calypso';
+import page from 'page';
+import React from 'react';
+import ReactDom from 'react-dom';
 
 /**
  * Internal Dependencies
  */
-import sitesFactory from 'lib/sites-list';
-import route from 'lib/route';
-import { renderWithReduxStore } from 'lib/react-helpers';
-import config from 'config';
 import analytics from 'lib/analytics';
-import titlecase from 'to-title-case';
-import SitePurchasesData from 'components/data/purchases/site-purchases';
-import { SiteSettingsComponent } from 'my-sites/site-settings/main';
+import config from 'config';
 import DeleteSite from './delete-site';
+import QuerySitePurchases from 'components/data/query-site-purchases';
+import { renderWithReduxStore } from 'lib/react-helpers';
+import route from 'lib/route';
+import SiteSettingsComponent from 'my-sites/site-settings/main';
+import sitesFactory from 'lib/sites-list';
 import StartOver from './start-over';
-import utils from 'lib/site/utils';
 import titleActions from 'lib/screen-title/actions';
+import titlecase from 'to-title-case';
+import utils from 'lib/site/utils';
 
 /**
  * Module vars
@@ -44,6 +44,14 @@ function canDeleteSite( site ) {
 	}
 
 	return true;
+}
+
+function renderPage( context, component ) {
+	renderWithReduxStore(
+		component,
+		document.getElementById( 'primary' ),
+		context.store
+	);
 }
 
 module.exports = {
@@ -91,16 +99,9 @@ module.exports = {
 			}
 		}
 
-		renderWithReduxStore(
-			<SitePurchasesData>
-				<SiteSettingsComponent
-					context={ context }
-					sites={ sites }
-					section={ section }
-					path={ context.path } />
-			</SitePurchasesData>,
-			document.getElementById( 'primary' ),
-			context.store
+		renderPage(
+			context,
+			<SiteSettingsComponent sites={ sites } section={ section } />
 		);
 
 		// analytics tracking
@@ -111,35 +112,23 @@ module.exports = {
 	},
 
 	importSite( context ) {
-		ReactDom.render(
-			<SiteSettingsComponent
-				context={ context }
-				sites={ sites }
-				section="import"
-				path={ context.path } />,
-			document.getElementById( 'primary' )
+		renderPage(
+			context,
+			<SiteSettingsComponent sites={ sites } section="import" />
 		);
 	},
 
 	exportSite( context ) {
-		ReactDom.render(
-			<SiteSettingsComponent
-				context={ context }
-				sites={ sites }
-				section="export"
-				path={ context.path } />,
-			document.getElementById( 'primary' )
+		renderPage(
+			context,
+			<SiteSettingsComponent sites={ sites } section="export" />
 		);
 	},
 
 	guidedTransfer( context ) {
-		ReactDom.render(
-			<SiteSettingsComponent
-				context={ context }
-				sites={ sites }
-				section="guidedTransfer"
-				path={ context.path } />,
-			document.getElementById( 'primary' )
+		renderPage(
+			context,
+			<SiteSettingsComponent sites={ sites } section="guidedTransfer" />
 		);
 	},
 
@@ -159,14 +148,9 @@ module.exports = {
 			} );
 		}
 
-		ReactDom.render(
-			<SitePurchasesData>
-				<DeleteSite
-					context={ context }
-					sites={ sites }
-					path={ context.path } />
-			</SitePurchasesData>,
-			document.getElementById( 'primary' )
+		renderPage(
+			context,
+			<DeleteSite sites={ sites } path={ context.path } />
 		);
 	},
 
@@ -186,12 +170,9 @@ module.exports = {
 			} );
 		}
 
-		ReactDom.render(
-			<StartOver
-				context={ context }
-				sites={ sites }
-				path={ context.path } />,
-			document.getElementById( 'primary' )
+		renderPage(
+			context,
+			<StartOver sites={ sites } path={ context.path } />
 		);
 	},
 

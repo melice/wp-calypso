@@ -4,6 +4,7 @@
 import classNames from 'classnames';
 import page from 'page';
 import React from 'react';
+import { connect } from 'react-redux';
 
 /**
  * Internal dependencies
@@ -20,6 +21,8 @@ import Notice from 'components/notice';
 import paths from '../paths';
 import titles from 'me/purchases/titles';
 import { CALYPSO_CONTACT } from 'lib/url/support';
+import { getByPurchaseId } from 'state/purchases/selectors';
+import { getSelectedSite } from 'state/ui/selectors';
 
 const CancelPrivateRegistration = React.createClass( {
 	propTypes: {
@@ -206,4 +209,11 @@ const CancelPrivateRegistration = React.createClass( {
 	}
 } );
 
-export default CancelPrivateRegistration;
+export default connect(
+	( state, props ) => {
+		return {
+			selectedPurchase: getByPurchaseId( state, props.sites.getSelectedSite() ),
+			selectedSite: getSelectedSite( state )
+		};
+	}
+)( CancelPrivateRegistration );
