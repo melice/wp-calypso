@@ -167,7 +167,7 @@ const DesignPreview = React.createClass( {
 	},
 
 	getParsedPreviewUrl( site ) {
-		if ( ! site ) {
+		if ( ! site && ! this.props.previewUrl ) {
 			return null;
 		}
 		const baseUrl = this.props.previewUrl ? this.props.previewUrl : site.options.unmapped_url;
@@ -177,23 +177,24 @@ const DesignPreview = React.createClass( {
 	},
 
 	getPreviewUrl( site ) {
-		if ( ! site ) {
+		const parsed = this.getParsedPreviewUrl( site );
+		if ( ! parsed ) {
 			return null;
 		}
-		const parsed = this.getParsedPreviewUrl( site );
 		parsed.query.iframe = true;
 		parsed.query.theme_preview = true;
-		if ( site.options && site.options.frame_nonce ) {
+		if ( site && site.options.frame_nonce ) {
 			parsed.query[ 'frame-nonce' ] = site.options.frame_nonce;
 		}
 		return url.format( parsed ) + '&' + this.state.previewCount;
 	},
 
 	getExternalUrl( site ) {
-		if ( ! site ) {
+		const parsed = this.getParsedPreviewUrl( site );
+		if ( ! parsed ) {
 			return null;
 		}
-		return url.format( this.getParsedPreviewUrl( site ) );
+		return url.format( parsed );
 	},
 
 	render() {
