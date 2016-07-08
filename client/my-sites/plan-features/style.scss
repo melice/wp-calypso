@@ -89,23 +89,13 @@ $plan-features-header-banner-height: 20px;
 	position: absolute;
 	top: -3px;
 	right: -3px;
-	transform: translate(25%, -25%);
+	transform: translate( 25%, -25% );
 	fill: $alert-green;
 }
 
 .plan-features__header-text {
 	flex: 1;
 	padding: 6px 0 0 0;
-}
-
-
-.plan-features__header-price {
-	&.is-placeholder {
-		@include placeholder( 23% );
-		width: 60px;
-		margin: 10px 0;
-		height: 21px;
-	}
 }
 
 .plan-features__header-title {
@@ -119,6 +109,13 @@ $plan-features-header-banner-height: 20px;
 	font-size: 28px;
 	line-height: 1.5;
 	color: $gray-dark;
+
+	&.is-placeholder {
+		@include placeholder( 23% );
+		width: 60px;
+		margin: 10px 0;
+		height: 21px;
+	}
 }
 
 .plan-features__price.is-original {
@@ -143,12 +140,12 @@ $plan-features-header-banner-height: 20px;
 	top: 50%;
 	right: 0;
 	border-top: 2px solid $orange-fire;
-	transform: rotate(-16deg);
+	transform: rotate( -16deg );
 	opacity: .9;
 }
 
 .plan-features__price-currency-symbol,
-.plan-features__price-fraction{
+.plan-features__price-fraction {
 	vertical-align: super;
 	font-size: 12px;
 }
