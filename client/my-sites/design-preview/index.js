@@ -169,21 +169,13 @@ const DesignPreview = React.createClass( {
 		event.preventDefault();
 	},
 
-	getParsedPreviewUrl() {
+	getPreviewUrl() {
 		if ( ! this.props.selectedSiteUrl && ! this.props.previewUrl ) {
 			return null;
 		}
-		const baseUrl = this.props.previewUrl ? this.props.previewUrl : this.props.selectedSiteUrl;
+		const baseUrl = this.props.previewUrl || this.props.selectedSiteUrl;
 		const parsed = url.parse( baseUrl, true );
 		delete parsed.search;
-		return parsed;
-	},
-
-	getPreviewUrl() {
-		const parsed = this.getParsedPreviewUrl();
-		if ( ! parsed ) {
-			return null;
-		}
 		parsed.query.iframe = true;
 		parsed.query.theme_preview = true;
 		if ( this.props.selectedSiteNonce ) {
@@ -193,11 +185,7 @@ const DesignPreview = React.createClass( {
 	},
 
 	getExternalUrl() {
-		const parsed = this.getParsedPreviewUrl();
-		if ( ! parsed ) {
-			return null;
-		}
-		return url.format( parsed );
+		return this.props.previewUrl || this.props.selectedSiteUrl;
 	},
 
 	render() {
