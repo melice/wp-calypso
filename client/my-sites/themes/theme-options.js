@@ -105,8 +105,8 @@ export const help = {
 	hideForSite: ( { isJetpack = false } = {} ) => isJetpack,
 };
 
-export function bindOptionsToDispatch( options, source ) {
-	return dispatch => mapValues( options, option => Object.assign(
+function bindOptionToDispatch( option, source ) {
+	return dispatch => Object.assign(
 		{},
 		option,
 		option.action
@@ -115,5 +115,9 @@ export function bindOptionsToDispatch( options, source ) {
 				dispatch
 				) }
 			: {}
-	) );
+	);
+}
+
+export function bindOptionsToDispatch( options, source ) {
+	return dispatch => mapValues( options, option => bindOptionToDispatch( option, source )( dispatch ) );
 }
