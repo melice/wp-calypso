@@ -4,7 +4,7 @@
  * @param {Object} state - current state object
  * @return {Array} Purchases
  */
-export const getPurchases = state => state.purchases.data;
+export const getPurchases = state => state.purchases.items.data;
 
 /**
  * Returns a Purchase object from the state using its id
@@ -16,5 +16,5 @@ export const getByPurchaseId = ( state, purchaseId ) => (
 	getPurchases( state ).filter( purchase => purchase.id === purchaseId ).shift()
 );
 
-export const isFetchingUserPurchases = state => state.purchases.isFetchingUserPurchases;
-export const isFetchingSitePurchases = state => state.purchases.isFetchingSitePurchases;
+export const isFetchingUserPurchases = state => state.purchases.items.isFetchingUserPurchases;
+export const isFetchingSitePurchases = state => state.purchases.items.isFetchingSitePurchases;

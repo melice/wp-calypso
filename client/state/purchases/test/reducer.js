@@ -142,7 +142,7 @@ describe( 'items', () => {
 			purchaseId: 2
 		} );
 
-		expect( getByPurchaseId( { purchases: state }, 2 ) ).to.be.eql( {
+		expect( getByPurchaseId( { purchases: { items: state } }, 2 ) ).to.be.eql( {
 			id: 2,
 			error: 'Unable to fetch stored cards',
 			siteId,
@@ -175,7 +175,7 @@ describe( 'items', () => {
 			}
 		} );
 
-		expect( getByPurchaseId( { purchases: state }, 2 ) ).to.be.eql( {
+		expect( getByPurchaseId( { purchases: { items: state } }, 2 ) ).to.be.eql( {
 			amount: 2200,
 			error: null,
 			hasPrivateRegistration: false,
