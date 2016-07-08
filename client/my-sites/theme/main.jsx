@@ -362,9 +362,7 @@ const WrappedThemeSheet = ( props ) => (
 );
 
 const mergeProps = ( stateProps, dispatchProps, ownProps ) => {
-	const { id, price, isLoggedIn } = ownProps;
-	const { currentTheme } = stateProps;
-	const isActive = currentTheme && currentTheme.id === id; // TODO: Replace with ownProps.isActive, see #6595
+	const { active: isActive, price, isLoggedIn } = ownProps;
 
 	let defaultOption;
 
