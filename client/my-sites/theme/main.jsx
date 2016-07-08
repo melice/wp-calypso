@@ -10,6 +10,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import i18n from 'i18n-calypso';
 import titlecase from 'to-title-case';
+import mapValues from 'lodash/mapValues';
 
 /**
  * Internal dependencies
@@ -84,11 +85,11 @@ const ThemeSheet = React.createClass( {
 	},
 
 	onPrimaryClick() {
-		this.props.defaultOption.action( this.props, this.props.selectedSite );
+		this.props.defaultOption.action( this.props );
 	},
 
 	onPreviewButtonClick() {
-		this.props.defaultOption.action( this.props, this.props.selectedSite );
+		this.props.defaultOption.action( this.props );
 	},
 
 	getValidSections() {
@@ -372,6 +373,31 @@ const bindDefaultOptionToDispatch = ( dispatch, ownProps ) => {
 	return { defaultOption: bindOptionToDispatch( defaultOption, 'showcase-sheet' )( dispatch ) };
 };
 
+const mergeProps = ( stateProps, dispatchProps, ownProps ) => {
+	const { selectedSite: site } = stateProps;
+	let options = dispatchProps;
+
+	if ( site ) {
+		options = mapValues( options, option => Object.assign(
+			{},
+			option,
+			option.action
+				? { action: theme => option.action( theme, site ) }
+				: {},
+			option.getUrl
+				? { getUrl: theme => option.getUrl( theme, site ) }
+				: {}
+		) );
+	}
+
+	return Object.assign(
+		{},
+		ownProps,
+		stateProps,
+		options
+	);
+};
+
 export default connect(
 	( state ) => {
 		const selectedSite = getSelectedSite( state );
@@ -379,5 +405,6 @@ export default connect(
 		const backPath = getBackPath( state );
 		return { selectedSite, siteSlug, backPath };
 	},
-	bindDefaultOptionToDispatch
+	bindDefaultOptionToDispatch,
+	mergeProps
 )( WrappedThemeSheet );
