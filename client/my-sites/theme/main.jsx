@@ -36,7 +36,7 @@ import {
 	purchase,
 	activate,
 	customize,
-	bindOptionsToDispatch
+	bindOptionToDispatch
 } from 'my-sites/themes/theme-options';
 import { getBackPath } from 'state/themes/themes-ui/selectors';
 import EmptyContentComponent from 'components/empty-content';
@@ -84,11 +84,11 @@ const ThemeSheet = React.createClass( {
 	},
 
 	onPrimaryClick() {
-		this.props.options.default.action( this.props, this.props.selectedSite );
+		this.props.defaultOption.action( this.props, this.props.selectedSite );
 	},
 
 	onPreviewButtonClick() {
-		this.props.options.default.action( this.props, this.props.selectedSite );
+		this.props.defaultOption.action( this.props, this.props.selectedSite );
 	},
 
 	getValidSections() {
@@ -247,7 +247,7 @@ const ThemeSheet = React.createClass( {
 	},
 
 	renderPreview() {
-		const buttonLabel = this.props.options.default.label;
+		const buttonLabel = this.props.defaultOption.label;
 		return (
 			<ThemePreview showPreview={ this.state.showPreview }
 				theme={ this.props }
@@ -294,7 +294,7 @@ const ThemeSheet = React.createClass( {
 
 	renderSheet() {
 		let actionTitle = <span className="theme__sheet-button-placeholder">loading......</span>;
-		actionTitle = this.props.options.default.label;
+		actionTitle = this.props.defaultOption.label;
 		if ( ! this.props.active && this.props.name ) {
 			actionTitle = i18n.translate( 'Pick this design' );
 		}
@@ -354,29 +354,22 @@ const WrappedThemeSheet = ( props ) => (
 	</ThemesSiteSelectorModal>
 );
 
-const mergeProps = ( stateProps, dispatchProps, ownProps ) => {
+const bindDefaultOptionToDispatch = ( dispatch, ownProps ) => {
 	const { active: isActive, price, isLoggedIn } = ownProps;
 
 	let defaultOption;
 
 	if ( ! isLoggedIn ) {
-		defaultOption = dispatchProps.signup;
+		defaultOption = signup;
 	} else if ( isActive ) {
-		defaultOption = dispatchProps.customize;
+		defaultOption = customize;
 	} else if ( price ) {
-		defaultOption = dispatchProps.purchase;
+		defaultOption = purchase;
 	} else {
-		defaultOption = dispatchProps.activate;
+		defaultOption = activate;
 	}
 
-	return Object.assign(
-		{},
-		ownProps,
-		stateProps,
-		{
-			options: { 'default': defaultOption },
-		}
-	);
+	return { defaultOption: bindOptionToDispatch( defaultOption, 'showcase-sheet' )( dispatch ) };
 };
 
 export default connect(
@@ -386,11 +379,5 @@ export default connect(
 		const backPath = getBackPath( state );
 		return { selectedSite, siteSlug, backPath };
 	},
-	bindOptionsToDispatch( {
-		signup,
-		purchase,
-		activate,
-		customize
-	}, 'showcase-sheet' ),
-	mergeProps
+	bindDefaultOptionToDispatch
 )( WrappedThemeSheet );
