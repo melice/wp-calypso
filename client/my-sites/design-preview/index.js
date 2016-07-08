@@ -5,7 +5,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import noop from 'lodash/noop';
 import debugFactory from 'debug';
-import url from 'url';
 
 /**
  * Internal dependencies
@@ -20,6 +19,7 @@ import layoutFocus from 'lib/layout-focus';
 import { getSelectedSite, getSelectedSiteId, getPreviewUrl } from 'state/ui/selectors';
 import { getSiteOption } from 'state/sites/selectors';
 import { getPreviewMarkup, getPreviewCustomizations, isPreviewUnsaved } from 'state/preview/selectors';
+import addQueryArgs from 'lib/route/add-query-args';
 
 const debug = debugFactory( 'calypso:design-preview' );
 
@@ -175,20 +175,17 @@ const DesignPreview = React.createClass( {
 			debug( 'no preview url and no site url were found for this site' );
 			return null;
 		}
-		const baseUrl = this.props.previewUrl || this.props.selectedSiteUrl;
-		const parsed = url.parse( baseUrl, true );
-		delete parsed.search;
-		parsed.query.iframe = true;
-		parsed.query.theme_preview = true;
-		if ( this.props.selectedSiteNonce ) {
-			parsed.query[ 'frame-nonce' ] = this.props.selectedSiteNonce;
-		}
-		const previewUrl = url.format( parsed ) + '&' + this.state.previewCount;
+		const previewUrl = addQueryArgs( {
+			iframe: true,
+			theme_preview: true,
+			'frame-nonce': this.props.selectedSiteNonce,
+			cachebust: this.state.previewCount,
+		}, this.getBasePreviewUrl() );
 		debug( 'using this preview url', previewUrl );
 		return previewUrl;
 	},
 
-	getExternalUrl() {
+	getBasePreviewUrl() {
 		return this.props.previewUrl || this.props.selectedSiteUrl;
 	},
 
@@ -204,7 +201,7 @@ const DesignPreview = React.createClass( {
 			<WebPreview
 				className={ this.props.className }
 				previewUrl={ useEndpoint ? null : this.getPreviewUrl() }
-				externalUrl={ this.getExternalUrl() }
+				externalUrl={ this.getBasePreviewUrl() }
 				showExternal={ true }
 				showClose={ this.props.showClose }
 				showPreview={ this.props.showPreview }
