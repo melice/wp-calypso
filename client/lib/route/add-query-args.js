@@ -2,6 +2,7 @@
  * External dependencies
  */
 import urlModule from 'url';
+import pickBy from 'lodash/pickBy';
 
 export default function( args, url ) {
 	if ( 'object' !== typeof args ) {
@@ -13,12 +14,7 @@ export default function( args, url ) {
 	}
 
 	// Remove any undefined query args
-	args = Object.keys( args ).reduce( ( defined, key ) => {
-		if ( args[ key ] !== undefined && args[ key ] !== null ) {
-			defined[ key ] = args[ key ];
-		}
-		return defined;
-	}, {} );
+	args = pickBy( args, ( arg ) => arg != null );
 
 	// Build new query object for url
 	const parsedUrl = urlModule.parse( url, true );
