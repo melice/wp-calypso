@@ -18,16 +18,17 @@ import jetpackConnect from './jetpack-connect/reducer';
 import jetpackSync from './jetpack-sync/reducer';
 import notices from './notices/reducer';
 import plans from './plans/reducer';
-import preview from './preview/reducer';
-import posts from './posts/reducer';
 import plugins from './plugins/reducer';
 import postTypes from './post-types/reducer';
+import posts from './posts/reducer';
+import preferences from './preferences/reducer';
+import preview from './preview/reducer';
 import pushNotifications from './push-notifications/reducer';
 import reader from './reader/reducer';
 import receipts from './receipts/reducer';
 import sharing from './sharing/reducer';
-import sites from './sites/reducer';
 import siteSettings from './site-settings/reducer';
+import sites from './sites/reducer';
 import stats from './stats/reducer';
 import support from './support/reducer';
 import terms from './terms/reducer';
@@ -35,7 +36,6 @@ import themes from './themes/reducer';
 import ui from './ui/reducer';
 import users from './users/reducer';
 import wordads from './wordads/reducer';
-import preferences from './preferences/reducer';
 
 /**
  * Module variables
