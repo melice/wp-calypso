@@ -15,16 +15,16 @@ const DomainSuggestionFlag = React.createClass( {
 	},
 
 	render() {
-		const newTLDs = [];
+		const newTLDs = [ 'wales' ];
 
 		if ( newTLDs.some( function( tld ) {
-				return endsWith( this.props.domain, tld );
-			}, this ) ) {
+			return endsWith( this.props.domain, tld );
+		}, this ) ) {
 			return (
 				<Notice
 					isCompact
 					status="is-success">
-					{ this.translate( 'New', {context: 'Domain suggestion flag'} ) }
+					{ this.translate( 'New', { context: 'Domain suggestion flag' } ) }
 				</Notice>
 			);
 		}
